@@ -54,8 +54,8 @@ public class FractionCalculator {
 					indexOfSlash + 1).trim();
 			numerator = Integer.parseInt(numeratorString);
 			denominator = Integer.parseInt(denominatorString);
-			arr[0] = wholeNum;
-			arr[1] = numerator;
+			arr[0] = 0;
+			arr[1] = numerator + (wholeNum * denominator);
 			arr[2] = denominator;
 		} else {
 			wholeNum = 0;
@@ -64,8 +64,8 @@ public class FractionCalculator {
 			String denominatorString = frac.substring(indexOfSlash + 1).trim();
 			numerator = Integer.parseInt(numeratorString);
 			denominator = Integer.parseInt(denominatorString);
-			arr[0] = wholeNum;
-			arr[1] = numerator;
+			arr[0] = 0;
+			arr[1] = numerator + (wholeNum * denominator);
 			arr[2] = denominator;
 		}
 		return arr;
@@ -86,6 +86,7 @@ public class FractionCalculator {
 		setSecondHalf(equ.substring(equ.indexOf(operator1) + 1));
 		if (operator1 == "+") {
 			answer = addition();
+			reduce(answer);
 		}
 	}
 
@@ -100,8 +101,9 @@ public class FractionCalculator {
 	public static int[] addition() {
 		int[] temp = new int[3];
 		if (firstHalf[2] == secondHalf[2]) {
+			temp[0] = firstHalf[0] + secondHalf[0];
 			temp[1] = firstHalf[1] + secondHalf[1];
-			reduce(temp);
+			temp[2] = firstHalf[2];
 		}
 		return temp;
 
