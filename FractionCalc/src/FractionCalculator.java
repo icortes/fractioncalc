@@ -1,24 +1,15 @@
 import java.util.Scanner;
 
 public class FractionCalculator {
-	public static int indexOfUnderscore = -1;
-	public static int[] firstHalf = new int[3];
-	public static int[] secondHalf = new int[3];
-	public static int[] answer = new int[3];
-	public static String operator = null;
+	public static int[] firstHalf = new int[2];
+	public static int[] secondHalf = new int[2];
+	public static int[] answer = new int[2];
 
 	public static void main(String[] args) {
 		String in = inputFromUser();
 		while (!in.equalsIgnoreCase("quit")) {
 			separate(in);
-			for (int i : firstHalf)
-				System.out.println(i);
-			for (int i : secondHalf)
-				System.out.println(i);
-			if (operator == "+") {
-				System.out.println(answer[0] + "_" + answer[1] + "/"
-						+ answer[2]);
-			}
+
 			in = inputFromUser();
 		}
 	}
@@ -28,12 +19,11 @@ public class FractionCalculator {
 
 	}
 
-	public static boolean findUnderscore(String in) {
+	public static int findUnderscore(String in) {
 		if (in.contains("_")) {
-			indexOfUnderscore = in.indexOf("_");
-			return true;
+			return in.indexOf("_");
 		}
-		return false;
+		return in.indexOf("_");
 
 	}
 
@@ -41,8 +31,9 @@ public class FractionCalculator {
 		int numerator;
 		int denominator;
 		int wholeNum;
-		int[] arr = new int[3];
-		if (findUnderscore(frac)) {
+		int indexOfUnderscore = findUnderscore(frac);
+		int[] arr = new int[2];
+		if (indexOfUnderscore != -1) {
 			String wholeNumString = frac.substring(0, indexOfUnderscore).trim();
 			wholeNum = Integer.parseInt(wholeNumString);
 			String fractionString = frac.substring(indexOfUnderscore + 1)
@@ -54,9 +45,8 @@ public class FractionCalculator {
 					indexOfSlash + 1).trim();
 			numerator = Integer.parseInt(numeratorString);
 			denominator = Integer.parseInt(denominatorString);
-			arr[0] = 0;
-			arr[1] = numerator + (wholeNum * denominator);
-			arr[2] = denominator;
+			arr[0] = numerator + (wholeNum * denominator);
+			arr[1] = denominator;
 		} else {
 			wholeNum = 0;
 			int indexOfSlash = frac.indexOf("/");
@@ -64,55 +54,45 @@ public class FractionCalculator {
 			String denominatorString = frac.substring(indexOfSlash + 1).trim();
 			numerator = Integer.parseInt(numeratorString);
 			denominator = Integer.parseInt(denominatorString);
-			arr[0] = 0;
-			arr[1] = numerator + (wholeNum * denominator);
-			arr[2] = denominator;
+			arr[0] = numerator + (wholeNum * denominator);
+			arr[1] = denominator;
 		}
 		return arr;
 	}
 
 	public static void separate(String equ) {
-		String operator1 = null;
-		if (equ.contains("+"))
-			operator1 = "+";
-		else if (equ.contains("-"))
-			operator1 = "-";
-		else if (equ.contains("*"))
-			operator1 = "*";
-		else if (equ.contains("%"))
-			operator1 = "%";
-		operator = operator1;
-		setFirstHalf(equ.substring(0, equ.indexOf(operator1)));
-		setSecondHalf(equ.substring(equ.indexOf(operator1) + 1));
-		if (operator1 == "+") {
-			answer = addition();
-			reduce(answer);
+		String operator = findOperator(equ);
+		setFirstHalf(equ.substring(0, equ.indexOf(operator)));
+		setSecondHalf(equ.substring(equ.indexOf(operator) + 1));
+		if (operator == "+") {
+			
 		}
+	}
+
+	public static String findOperator(String in) {
+		String operator = null;
+		if (in.contains("+"))
+			operator = "+";
+		else if (in.contains("-"))
+			operator = "-";
+		else if (in.contains("*"))
+			operator = "*";
+		else if (in.contains("%"))
+			operator = "%";
+		return operator;
 	}
 
 	public static void setFirstHalf(String frac) {
 		firstHalf = setVars(frac);
+		for (int element : firstHalf)
+			System.out.print(element + " ");
+		System.out.println();
 	}
 
 	public static void setSecondHalf(String frac) {
 		secondHalf = setVars(frac);
+		for (int element : secondHalf)
+			System.out.print(element + " ");
 	}
 
-	public static int[] addition() {
-		int[] temp = new int[3];
-		if (firstHalf[2] == secondHalf[2]) {
-			temp[0] = firstHalf[0] + secondHalf[0];
-			temp[1] = firstHalf[1] + secondHalf[1];
-			temp[2] = firstHalf[2];
-		}
-		return temp;
-
-	}
-
-	public static void reduce(int[] temp) {
-		int n = temp[1] / temp[2];
-		int r = temp[1] % temp[2];
-		temp[0] += n;
-		temp[1] += r;
-	}
 }
