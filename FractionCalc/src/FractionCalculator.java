@@ -95,4 +95,23 @@ public class FractionCalculator {
 			System.out.print(element + " ");
 	}
 
+	public static int getLCM(int a, int b) {
+		for (int i = Math.min(a, b); i <= Math.max(a, b); i++) {
+			if (i % a == 0 && i % b == 0) {
+				return i;
+			}
+		}
+		return a * b;
+	}
+
+	public static int getGCD(int num, int denom) {
+		int gcd = 1;
+		for (int i = 1; i <= denom; i++) {
+			if (num % i == 0 && denom % i == 0 && i > gcd) {
+				gcd = i;
+			}
+		}
+		return gcd;
+	}
+
 }
