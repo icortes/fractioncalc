@@ -6,12 +6,11 @@ public class FractionCalculator {
 		int[] firstHalf = new int[2];
 		int[] secondHalf = new int[2];
 		int[] answer = new int[2];
-		String operator = null;
 		String in = inputFromUser();
 		while (!in.equalsIgnoreCase("quit")) {
-			operator = findOperator(in.trim());
+			String operator = findOperator(in.trim());
 			separate(in, firstHalf, secondHalf);
-			
+			handleOperation(operator, firstHalf, secondHalf);
 			in = inputFromUser();
 		}
 	}
@@ -27,12 +26,11 @@ public class FractionCalculator {
 		setToArray(equ.substring(equ.indexOf(operator) + 1), secondHalf);
 	}
 
-	public static int findUnderscore(String in) {
-		if (in.contains("_")) {
-			return in.indexOf("_");
-		}
-		return in.indexOf("_");
-
+	public static void setToArray(String frac, int[] arr) {
+		arr = setVars(frac);
+		for (int element : arr)
+			System.out.print(element + " ");
+		System.out.println();
 	}
 
 	public static int[] setVars(String frac) {
@@ -68,6 +66,14 @@ public class FractionCalculator {
 		return arr;
 	}
 
+	public static int findUnderscore(String in) {
+		if (in.contains("_")) {
+			return in.indexOf("_");
+		}
+		return in.indexOf("_");
+
+	}
+
 	public static String findOperator(String in) {
 		String operator = null;
 		if (in.contains("+"))
@@ -81,11 +87,17 @@ public class FractionCalculator {
 		return operator;
 	}
 
-	public static void setToArray(String frac, int[] arr) {
-		arr = setVars(frac);
-		for (int element : arr)
-			System.out.print(element + " ");
-		System.out.println();
+	public static int[] handleOperation(String operator, int[] leftFraction,
+			int[] rightFraction) {
+		int[] answer = new int[2];
+		if (operator.equals("+")) {
+			answer[0] = leftFraction[0] + rightFraction[0];
+			if (leftFraction[1] == 1 && rightFraction[1] == 1) {
+				answer[1] = -1;
+			}
+		}
+		return answer;
+
 	}
 
 	public static int getLCM(int a, int b) {
