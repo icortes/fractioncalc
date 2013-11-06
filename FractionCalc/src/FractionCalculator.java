@@ -10,7 +10,11 @@ public class FractionCalculator {
 		while (!in.equalsIgnoreCase("quit")) {
 			String operator = findOperator(in.trim());
 			separate(in, firstHalf, secondHalf);
-			handleOperation(operator, firstHalf, secondHalf);
+			answer = handleOperation(operator, firstHalf, secondHalf);
+			if(answer[1] == -1)
+				System.out.print(answer[0]);
+			else
+				System.out.print(answer[0] + "/" + answer[1]);
 			in = inputFromUser();
 		}
 	}
@@ -22,15 +26,16 @@ public class FractionCalculator {
 
 	public static void separate(String equ, int[] firstHalf, int[] secondHalf) {
 		String operator = findOperator(equ);
-		setToArray(equ.substring(0, equ.indexOf(operator)), firstHalf);
-		setToArray(equ.substring(equ.indexOf(operator) + 1), secondHalf);
+		firstHalf = setToArray(equ.substring(0, equ.indexOf(operator)), firstHalf);
+		secondHalf = setToArray(equ.substring(equ.indexOf(operator) + 1), secondHalf);
 	}
 
-	public static void setToArray(String frac, int[] arr) {
+	public static int[] setToArray(String frac, int[] arr) {
 		arr = setVars(frac);
 		for (int element : arr)
 			System.out.print(element + " ");
 		System.out.println();
+		return arr;
 	}
 
 	public static int[] setVars(String frac) {
@@ -90,11 +95,25 @@ public class FractionCalculator {
 	public static int[] handleOperation(String operator, int[] leftFraction,
 			int[] rightFraction) {
 		int[] answer = new int[2];
+		int lcm;
 		if (operator.equals("+")) {
 			answer[0] = leftFraction[0] + rightFraction[0];
 			if (leftFraction[1] == 1 && rightFraction[1] == 1) {
 				answer[1] = -1;
 			}
+			else if (leftFraction[1] > rightFraction[1]) {
+				lcm = getLCM(answer[0], answer[1]);
+				answer[0] /= lcm;
+				answer[1] /= lcm;
+			}
+			else if (leftFraction[1] < rightFraction[1]) {
+				lcm = getLCM(answer[0], answer[1]);
+				answer[0] /= lcm;
+				answer[1] /= lcm;
+			}
+			for (int element : answer)
+				System.out.print(element + " ");
+			System.out.println();
 		}
 		return answer;
 
