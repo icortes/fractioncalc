@@ -14,15 +14,25 @@ public class FractionCalculator {
 			secondHalf = setFraction(in.substring(in.indexOf(operator) + 1)
 					.trim(), secondHalf);
 			answer = handleOperation(operator, firstHalf, secondHalf);
-			reduceFraction(answer);
-			for (int element : firstHalf)
-				System.out.print(element + " ");
-			System.out.println();
-			for (int element : secondHalf)
-				System.out.print(element + " ");
-			System.out.println();
+			int wholeNum = 0;
 			if (answer[1] == -1)
 				System.out.print(answer[0]);
+			else if (answer[0] > answer[1]) {
+				wholeNum = answer[0] / answer[1];
+				answer[0] = answer[0] % answer[1];
+				if (answer[0] == 0)
+					System.out.println(wholeNum);
+				else
+					System.out.println(wholeNum + "_" + answer[0] + "/"
+							+ answer[1]);
+			} else if (answer[0] == 0)
+				System.out.println("0");
+			else if (answer[0] > 0) {
+				String fracString = answer[0] + "/" + answer[1];
+				answer = setToArray(fracString.substring(1), answer);
+				
+			}
+
 			else
 				System.out.print(answer[0] + "/" + answer[1]);
 			in = inputFromUser();
@@ -100,30 +110,54 @@ public class FractionCalculator {
 	public static int[] handleOperation(String operator, int[] leftFraction,
 			int[] rightFraction) {
 		int[] answer = new int[2];
-		int lcm;
 		if (operator.equals("+")) {
-
 			if (leftFraction[1] == rightFraction[1]) {
 				answer[0] = leftFraction[0] + rightFraction[0];
 				answer[1] = leftFraction[1];
-			} else if (leftFraction[1] > rightFraction[1]) {
-				lcm = getLCM(answer[0], answer[1]);
-				answer[0] /= lcm;
-				answer[1] /= lcm;
-			} else if (leftFraction[1] < rightFraction[1]) {
-				lcm = getLCM(answer[0], answer[1]);
-				answer[0] /= lcm;
-				answer[1] /= lcm;
+				answer = reduceFraction(answer);
+				if (answer[0] == answer[1])
+					answer[1] = -1;
+			} else {
+				leftFraction[0] *= getLCM(leftFraction[1], rightFraction[1]);
+				leftFraction[1] *= getLCM(leftFraction[1], rightFraction[1]);
+				rightFraction[0] *= getLCM(leftFraction[1], rightFraction[1]);
+				rightFraction[1] *= getLCM(leftFraction[1], rightFraction[1]);
+				answer[0] = leftFraction[0] + rightFraction[0];
+				answer[1] = leftFraction[1];
+				answer = reduceFraction(answer);
+				if (answer[0] == answer[1])
+					answer[1] = -1;
 			}
+		}
+		if (operator.equals("-")) {
+			if (leftFraction[1] == rightFraction[1]) {
+				answer[0] = leftFraction[0] - rightFraction[0];
+				answer[1] = leftFraction[1];
+				answer = reduceFraction(answer);
+				if (answer[0] == answer[1])
+					answer[1] = -1;
+			} else {
+				leftFraction[0] *= getLCM(leftFraction[1], rightFraction[1]);
+				leftFraction[1] *= getLCM(leftFraction[1], rightFraction[1]);
+				rightFraction[0] *= getLCM(leftFraction[1], rightFraction[1]);
+				rightFraction[1] *= getLCM(leftFraction[1], rightFraction[1]);
+				answer[0] = leftFraction[0] - rightFraction[0];
+				answer[1] = leftFraction[1];
+				answer = reduceFraction(answer);
+				if (answer[0] == answer[1])
+					answer[1] = -1;
+			}
+
 		}
 		return answer;
 
 	}
 
-	public static void reduceFraction(int[] fraction) {
+	public static int[] reduceFraction(int[] fraction) {
 		int gcd = getGCD(fraction[0], fraction[1]);
 		fraction[0] /= gcd;
 		fraction[1] /= gcd;
+		return fraction;
 	}
 
 	public static int getLCM(int a, int b) {
